@@ -28,7 +28,8 @@
             <ComboBox DropDownOpened="profileSelect_DropDownOpened" DockPanel.Dock="Left" x:Name="profileSelect" HorizontalAlignment="Left" Margin="5,0,0,0" Width="110" VerticalAlignment="Bottom" SelectionChanged="ProfileSelect_SelectionChanged"/>
             <Button x:Name="newProfile" Content="{DynamicResource saveNew}" HorizontalAlignment="Left" Margin="5,0,0,0" Padding="20,0,20,0" Click="NewProfile_Click" DockPanel.Dock="Left"/>
             <TextBox DockPanel.Dock="Left" x:Name="profileName" HorizontalAlignment="Left" Margin="5,0,0,0" TextWrapping="Wrap" Text="" Width="120"/>
-            <Button x:Name="defaultsButton" Content="{DynamicResource loadDefault}" Margin="0" Click="DefaultsButton_Click" HorizontalAlignment="Right" Padding="20,0,20,0" DockPanel.Dock="Right"/>
+            <Button x:Name="loadCameraScript" Content="Load Camera Script (.cs)" Margin="0,0,5,0" Click="LoadCameraScript_Click" HorizontalAlignment="Right" Padding="20,0,20,0" DockPanel.Dock="Right"/>
+            <Button x:Name="defaultsButton" Content="{DynamicResource loadDefault}" Margin="0,0,5,0" Click="DefaultsButton_Click" HorizontalAlignment="Right" Padding="20,0,20,0" DockPanel.Dock="Right"/>
         </DockPanel>
         <TabControl Margin="0,0,0,0">
             <TabItem Header="{DynamicResource visualsTab}">

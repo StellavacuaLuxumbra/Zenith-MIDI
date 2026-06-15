@@ -1,0 +1,104 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore Zenith.sln
+    
+    - name: Build
+      run: dotnet build Zenith.sln --configuration Release --no-restore
+    
+    - name: Publish Windows EXE
+      run: |
+        dotnet publish Black-Midi-Render/Zenith.csproj `
+          -c Release `
+          -r win-x64 `
+          --self-contained true `
+          -p:PublishSingleFile=true `
+          -p:EnableCompressionInSingleFile=true `
+          -o ./publish
+    
+    - name: Upload EXE Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Zenith-Windows-x64
+        path: ./publish/Zenith.exe
+        retention-days: 30
+
+  build-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore Zenith.sln
+    
+    - name: Build
+      run: dotnet build Zenith.sln --configuration Release --no-restore
+    
+    - name: Publish Linux Binary
+      run: |
+        dotnet publish Black-Midi-Render/Zenith.csproj \
+          -c Release \
+          -r linux-x64 \
+          --self-contained true \
+          -p:PublishSingleFile=true \
+          -p:EnableCompressionInSingleFile=true \
+          -o ./publish-linux
+    
+    - name: Upload Linux Binary Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Zenith-Linux-x64
+        path: ./publish-linux/Zenith
+        retention-days: 30
+
+  create-release:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Download Windows Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: Zenith-Windows-x64
+        path: ./artifacts/windows
+    
+    - name: Download Linux Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: Zenith-Linux-x64
+        path: ./artifacts/linux
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./artifacts/windows/Zenith.exe
+          ./artifacts/linux/Zenith
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
