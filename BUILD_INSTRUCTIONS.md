@@ -42,29 +42,29 @@ dotnet publish Black-Midi-Render/Zenith.csproj -c Release -r win-x64 --self-cont
 
 ```csharp
 using System;
+using MIDITrailRender;
 
 public class CameraScript
 {
-    // 此方法在每帧调用
-    public static void UpdateFrame(
-        ref float viewOffset,    // X 轴偏移
-        ref float viewHeight,    // Y 轴高度
-        ref float viewPan,       // Z 轴平移
-        ref float camAng,        // 垂直旋转角度
-        ref float camRot,        // 水平旋转角度
-        ref float camSpin,       // 翻滚角度
-        ref float FOV,           // 视野角
-        ref float viewdist,      // 前方距离
-        ref float viewback)      // 后方距离
+    // 此方法在加载脚本时调用
+    public void UpdateCamera(Settings settings)
     {
         // 示例：缓慢旋转相机
-        camRot += 0.5f;
-        
+        settings.camRot += 0.5f;
+
         // 示例：设置固定 FOV
-        FOV = 75.0f;
-        
+        settings.FOV = Math.PI / 3;  // 60 度
+
         // 示例：设置相机高度
-        viewHeight = 100.0f;
+        settings.viewHeight = 100.0f;
+        
+        // 其他可用参数:
+        // settings.viewOffset - X 轴位置偏移
+        // settings.viewPan - Z 轴前后平移
+        // settings.camAng - 垂直旋转角度 (俯仰)
+        // settings.camSpin - 翻滚角度
+        // settings.viewdist - 前方距离
+        // settings.viewback - 后方距离
     }
 }
 ```
@@ -73,15 +73,15 @@ public class CameraScript
 
 | 参数名 | 描述 | 典型值范围 |
 |--------|------|-----------|
-| viewOffset | X 轴位置偏移 | -1000 ~ 1000 |
-| viewHeight | Y 轴高度 | 0 ~ 500 |
-| viewPan | Z 轴前后平移 | -1000 ~ 1000 |
-| camAng | 垂直旋转角度 (俯仰) | -90 ~ 90 |
-| camRot | 水平旋转角度 (偏航) | 0 ~ 360 |
-| camSpin | 翻滚角度 | -180 ~ 180 |
-| FOV | 视野角度 | 30 ~ 120 |
-| viewdist | 相机前方裁剪距离 | 0.1 ~ 100 |
-| viewback | 相机后方裁剪距离 | 100 ~ 10000 |
+| viewOffset | X 轴位置偏移 (左右平移) | -20 ~ 15 |
+| viewHeight | Y 轴高度 (上下) | 0 ~ 10 |
+| viewPan | Z 轴前后平移 | -20 ~ 20 |
+| camAng | 垂直旋转角度 (俯仰，弧度) | -π/2 ~ π/2 |
+| camRot | 水平旋转角度 (偏航，弧度) | -π ~ π |
+| camSpin | 翻滚角度 (弧度) | -π ~ π |
+| FOV | 视野角度 (弧度) | 5° ~ 150° |
+| viewdist | 相机前方裁剪距离 | 0 ~ 200 |
+| viewback | 相机后方裁剪距离 | 0 ~ 200 |
 
 ## 故障排除
 
