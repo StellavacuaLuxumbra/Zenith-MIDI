@@ -24,6 +24,7 @@ namespace MIDITrailRender
     {
         Settings settings;
         public AuraSelect auraselect;
+        CameraScriptSelector cameraScriptSelector;
 
         public event Action PaletteChanged
         {
@@ -75,6 +76,10 @@ namespace MIDITrailRender
             auraselect.VerticalAlignment = VerticalAlignment.Stretch;
             auraselect.Width = double.NaN;
             auraselect.Height = double.NaN;
+            
+            // Initialize camera script selector
+            cameraScriptSelector = new CameraScriptSelector();
+            
             SetValues();
             ReloadProfiles();
         }
@@ -227,6 +232,12 @@ namespace MIDITrailRender
             {
                 Console.WriteLine("Could not save settings");
             }
+        }
+
+        private void LoadCameraScript_Click(object sender, RoutedEventArgs e)
+        {
+            cameraScriptSelector.LoadScript(settings);
+            SetValues(); // Refresh UI after script modifies settings
         }
 
         private void DefaultsButton_Click(object sender, RoutedEventArgs e)
