@@ -17,31 +17,19 @@ jobs:
     - name: Setup .NET Framework Build Tools
       run: |
         choco install netfx-4.6.1-devpack -y
-        choco install dotnet-8.0-sdk -y
-
-    - name: Restore dependencies
-      run: dotnet restore Zenith.sln
 
     - name: Build with MSBuild
       run: |
         $msbuildPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
-        & $msbuildPath Zenith.sln /p:Configuration=Release /t:Rebuild
+        & $msbuildPath Zenith.sln /p:Configuration=Release /p:Platform="Any CPU" /t:Rebuild
 
-    - name: Publish Windows EXE
-      run: |
-        dotnet publish Black-Midi-Render/Zenith.csproj `
-          -c Release `
-          -r win-x64 `
-          --self-contained true `
-          -p:PublishSingleFile=true `
-          -p:EnableCompressionInSingleFile=true `
-          -o ./publish
-
-    - name: Upload EXE Artifact
+    - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Zenith-Windows-x64
-        path: ./publish/Zenith.exe
+        name: Zenith-Windows-Build
+        path: |
+          **/bin/**/Release/**/*.dll
+          **/bin/**/Release/**/*.exe
         retention-days: 30
 
   build-linux:
@@ -77,13 +65,14 @@ jobs:
     - name: Download Windows Artifact
       uses: actions/download-artifact@v4
       with:
-        name: Zenith-Windows-x64
+        name: Zenith-Windows-Build
         path: ./artifacts/windows
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ./artifacts/windows/Zenith.exe
+          ./artifacts/windows/**/Black-Midi-Render/bin/Release/*.exe
+          ./artifacts/windows/**/Black-Midi-Render/bin/Release/*.dll
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
