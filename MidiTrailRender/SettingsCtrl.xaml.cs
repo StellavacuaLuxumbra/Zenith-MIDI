@@ -32,6 +32,22 @@ namespace MIDITrailRender
             remove { paletteList.PaletteChanged -= value; }
         }
 
+        public void PromptForCameraScriptOnStartup()
+        {
+            // Show a dialog asking if the user wants to load a camera script
+            var result = System.Windows.MessageBox.Show(
+                "Do you want to load a camera control script?\n\nThis script will control camera position, rotation, FOV and other parameters.",
+                "Load Camera Script",
+                System.Windows.MessageBoxButton.YesNo,
+                System.Windows.MessageBoxImage.Question);
+
+            if (result == System.Windows.MessageBoxResult.Yes)
+            {
+                cameraScriptSelector.LoadScript(settings);
+                SetValues(); // Refresh UI after script modifies settings
+            }
+        }
+
         public void SetValues()
         {
             firstNote.Value = settings.firstNote;
