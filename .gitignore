@@ -1,41 +1,4 @@
 ```
-# Build artifacts
-bin/
-obj/
-*.dll
-*.exe
-*.pdb
-*.nupkg
-
-# Dependencies
-packages/
-node_modules/
-
-# Logs
-*.log
-
-# User-specific files
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Environment specific settings
-.env
-.env.local
-*.env.*
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Coverage reports
-coverage/
-*.coverage
-htmlcov/
-
-# Temporary files
-*.tmp
-*.temp
+# CI/CD
+.github/
 ```

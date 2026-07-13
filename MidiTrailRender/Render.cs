@@ -359,6 +359,16 @@ void main()
         int blackKeyBufferLen = 0;
         public void Init()
         {
+            // Show file dialog to load camera script on startup
+            System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    settingsCtrl.PromptForCameraScriptOnStartup();
+                }
+                catch { /* Ignore errors if dialog fails */ }
+            });
+
             whiteKeyShader = MakeShader(whiteKeyShaderVert, whiteKeyShaderFrag);
             blackKeyShader = MakeShader(blackKeyShaderVert, blackKeyShaderFrag);
             noteShader = MakeShader(noteShaderVert, noteShaderFrag);
